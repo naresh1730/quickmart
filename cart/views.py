@@ -11,7 +11,7 @@ def add_to_cart(request,slug):
         cart[slug]['quantity']+=1 
     else:
         cart[slug]={
-            'name':product.name,s
+            'name':product.name,
             'price':float(product.price),
             'quantity':1,
             'image':product.image.url if product.image else None 

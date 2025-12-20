@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'products',
     'accounts',
     'cart',
-    
+    'orders',    
 ]
 
 MIDDLEWARE = [
@@ -116,6 +116,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+# PayPal settings
+PAYPAL_CLIENT_ID = 'YOUR_PAYPAL_CLIENT_ID'
+PAYPAL_CLIENT_SECRET = 'YOUR_PAYPAL_CLIENT_SECRET'
+PAYPAL_MODE = 'sandbox'  # use 'live' in production
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

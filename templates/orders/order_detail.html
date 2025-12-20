@@ -1,0 +1,77 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Order #{{ order.id }} - QuickMart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <!-- Order Card -->
+            <div class="card shadow-lg rounded-4" style="background: linear-gradient(to bottom right, #ffffff, #f0f8ff);">
+                <div class="card-body">
+                    <h2 class="card-title mb-3 text-center">Order #{{ order.id }}</h2>
+
+                    <!-- Status & Total -->
+                    <div class="mb-4 text-center">
+                        <p>Status: 
+                            {% if order.status == "Pending" %}
+                                <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                            {% elif order.status == "Processing" %}
+                                <span class="badge bg-info text-dark">{{ order.status }}</span>
+                            {% elif order.status == "Shipped" %}
+                                <span class="badge bg-primary">{{ order.status }}</span>
+                            {% elif order.status == "Delivered" %}
+                                <span class="badge bg-success">{{ order.status }}</span>
+                            {% elif order.status == "Cancelled" %}
+                                <span class="badge bg-danger">{{ order.status }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="h5">Total: <span class="text-primary">${{ order.total_price|floatformat:2 }}</span></p>
+                    </div>
+
+                    <!-- Items Table -->
+                    <h4 class="mb-3">Items in this order:</h4>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ item.price|floatformat:2 }}</td>
+                                <td>${{ item.quantity|floatformat:0|add:item.price|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'orders:my_orders' %}" class="btn btn-success btn-lg rounded-pill shadow-sm">Back to My Orders</a>
+                        <a href="{% url 'category_list' %}" class="btn btn-primary btn-lg rounded-pill shadow-sm">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Optional custom styling -->
+<style>
+    body {
+        background: linear-gradient(to bottom right, #e0f7fa, #ffffff);
+    }
+    .card table td, .card table th {
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}

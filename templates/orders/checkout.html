@@ -1,0 +1,88 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Checkout - QuickMart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+
+            <!-- Checkout Card -->
+            <div class="card p-4 shadow-lg rounded-4" style="background: linear-gradient(to right, #ffffff, #f0f4f8);">
+                <h2 class="text-center mb-4">Checkout</h2>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" class="form-control" placeholder="John Doe" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="example@mail.com" required>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea id="address" name="address" class="form-control" rows="3" placeholder="Street, House No, ZIP" required></textarea>
+                    </div>
+
+                    <!-- City -->
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" id="city" name="city" class="form-control" placeholder="City" required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" id="phone" name="phone" class="form-control" placeholder="+1 234 567 890" required>
+                    </div>
+
+                    <!-- Total Price -->
+                    <div class="mb-4 text-end">
+                        <h4>Total: <span class="text-primary">${{ total }}</span></h4>
+                    </div>
+
+                    <!-- Action Buttons: Place Order or Pay with PayPal -->
+                    <div class="d-grid gap-3">
+                        <!-- Place Order normally -->
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                            Place Order
+                        </button>
+
+                        <!-- PayPal Payment Button -->
+                        {% if order %}
+                        <a href="{% url 'orders:paypal_payment' order.id %}" class="btn btn-warning btn-lg rounded-pill shadow-sm text-white">
+                            Pay with PayPal
+                        </a>
+                        {% endif %}
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional Background & Input Styling -->
+<style>
+    body {
+        background: linear-gradient(135deg, #c3ecf7, #ffffff);
+    }
+
+    .card input, .card textarea {
+        border-radius: 0.5rem;
+    }
+
+    .card input:focus, .card textarea:focus {
+        box-shadow: 0 0 5px rgba(0,123,255,0.5);
+        border-color: #0d6efd;
+    }
+</style>
+{% endblock %}
