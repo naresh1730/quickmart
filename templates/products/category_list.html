@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Categories</title>
+</head>
+<body>
+    <h1>Categories</h1>
+    <ul>
+        {% for category in categories %}
+            <li>
+                <a href="{% url 'product_detail' category.slug %}">{{ category.name }}</a>
+                {% if category.description %}
+                    <p>{{ category.description }}</p>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No categories available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

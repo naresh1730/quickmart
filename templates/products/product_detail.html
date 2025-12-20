@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category.name }}</title>
+</head>
+<body>
+    <h1>{{ category.name }}</h1>
+    {% if category.description %}
+        <p>{{ category.description }}</p>
+    {% endif %}
+
+    <h2>Products</h2>
+    <ul>
+        {% for product in products %}
+            <li>
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p>Price: ${{ product.price }}</p>
+                <p>Stock: {{ product.stock }}</p>
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="150">
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No products in this category.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'category_list' %}">Back to Categories</a>
+</body>
+</html>
