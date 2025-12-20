@@ -26,7 +26,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
-      <a class="navbar-brand" href="#">QuickMart</a>
+      <a class="navbar-brand" href="{% url 'category_list' %}">QuickMart</a>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
           {% if user.is_authenticated %}

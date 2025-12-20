@@ -73,7 +73,8 @@
                         <p class="card-text text-muted">{{ product.description }}</p>
                         <p class="fw-bold mt-auto">Price: ${{ product.price }}</p>
                         <p class="text-secondary">Stock: {{ product.stock }}</p>
-                        <a href="#" class="btn btn-primary btn-sm mt-2">Add to Cart</a>
+                        <a href="{% url 'cart:add_to_cart' product.slug %}" class="btn btn-primary btn-sm mt-2">Add to Cart</a>
+
                     </div>
                 </div>
             </div>
