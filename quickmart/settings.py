@@ -247,7 +247,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Extra folders with static files (used in development)
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Make sure this folder exists
+    BASE_DIR / 'static', 
+]# Make sure this folder exists
 
 
 MEDIA_URL = '/media/'
