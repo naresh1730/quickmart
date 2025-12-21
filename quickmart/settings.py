@@ -135,7 +135,7 @@ PAYPAL_MODE = os.getenv('PAYPAL_MODE')  # use 'live' in production
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-# STATIC_URL = "/static/"
+STATIC_URL = "/static/"
 # STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = '/media/'
