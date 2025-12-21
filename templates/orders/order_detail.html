@@ -30,6 +30,33 @@
                         <p class="h5">Total: <span class="text-primary">${{ order.total_price|floatformat:2 }}</span></p>
                     </div>
 
+                    <!-- PayPal Payment Info -->
+                    {% if order.payment_status == "Completed" %}
+                        <div class="mb-4 p-3 bg-light rounded shadow-sm">
+                            <h4>Payment Details</h4>
+                            <p><strong>Payment Status:</strong> <span class="text-success">{{ order.payment_status }}</span></p>
+                            <p><strong>Transaction ID:</strong> {{ order.transaction_id }}</p>
+                            <p><strong>Payer Email:</strong> {{ order.payer_email }}</p>
+                            <p><strong>Amount Paid:</strong> {{ order.payment_amount }} {{ order.payment_currency }}</p>
+                            <p><strong>Payment Time:</strong> {{ order.payment_time }}</p>
+                        </div>
+                    {% elif order.payment_status == "Pending" %}
+                        <div class="mb-4 p-3 bg-warning bg-opacity-25 rounded shadow-sm text-center">
+                            <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+                            <a href="{% url 'orders:paypal_payment' order.id %}" class="btn btn-primary btn-lg rounded-pill shadow-sm">Pay with PayPal</a>
+                        </div>
+                    {% elif order.payment_status == "Cancelled" %}
+                        <div class="mb-4 p-3 bg-danger bg-opacity-25 rounded shadow-sm text-center">
+                            <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+                        </div>
+                    {% elif order.payment_status == "Failed" %}
+                        <div class="mb-4 p-3 bg-danger bg-opacity-25 rounded shadow-sm text-center">
+                            <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+                            <p>There was an issue with your payment. Please try again.</p>
+                            <a href="{% url 'orders:paypal_payment' order.id %}" class="btn btn-primary btn-lg rounded-pill shadow-sm">Retry Payment</a>
+                        </div>
+                    {% endif %}
+
                     <!-- Items Table -->
                     <h4 class="mb-3">Items in this order:</h4>
                     <table class="table table-hover align-middle">
@@ -47,7 +74,7 @@
                                 <td>{{ item.product.name }}</td>
                                 <td>{{ item.quantity }}</td>
                                 <td>${{ item.price|floatformat:2 }}</td>
-                                <td>${{ item.quantity|floatformat:0|add:item.price|floatformat:2 }}</td>
+                                <td>${{ item.subtotal|floatformat:2 }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

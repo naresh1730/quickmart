@@ -18,20 +18,24 @@ def checkout(request):
     total = sum(item['price'] * item['quantity'] for item in cart.values())
 
     # Pre-create a pending order for PayPal button
-    order, created = Order.objects.get_or_create(
-        user=request.user,
-        status="Pending",
-        total_price=total
-    )
+    # order, created = Order.objects.get_or_create(
+    #     user=request.user,
+    #     status="Pending",
+    #     total_price=total
+    # )
 
     if request.method == "POST":
         # Save shipping info
-        order.full_name = request.POST.get('full_name')
-        order.email = request.POST.get('email')
-        order.address = request.POST.get('address')
-        order.city = request.POST.get('city')
-        order.phone = request.POST.get('phone')
-        order.save()
+        order=Order.objects.create(
+            user=request.user,
+            status="Pending",
+            total_price=total,
+            full_name = request.POST.get('full_name'),
+            email = request.POST.get('email'),
+            address = request.POST.get('address'),
+            city = request.POST.get('city'),
+            phone = request.POST.get('phone'),
+        )
 
         # Create order items
         for slug, item in cart.items():
@@ -43,17 +47,13 @@ def checkout(request):
                 quantity=item['quantity'],
             )
 
-        # Clear cart
-        request.session['cart'] = {}
-        messages.success(request, "Order placed successfully!")
-
-        # Stay on the same page to allow PayPal payment
-        return redirect('orders:checkout')
+        
+        messages.success(request, "Order created. Proceed to PayPal for payment.")
+        return redirect('orders:paypal_payment', order.id)
 
     return render(request, 'orders/checkout.html', {
         'cart': cart,
         'total': total,
-        'order': order
     })
 
 @login_required
@@ -111,8 +111,9 @@ def paypal_payment(request,order_id):
         order.save()
         #redirect url to payment approval url
         for link in payment.links:
-            if link.rel == 'approved_url':
+            if link.rel == 'approval_url':
                 return redirect(link.href)
+        return render(request, "orders/payment_error.html", {"error": "Approval URL not found"})
     else:
         #payment creation failed
         return render(request, "orders/payment_error.html", {"error":payment.error})
@@ -126,8 +127,27 @@ def paypal_success(request, order_id):
     if payment.execute({"payer_id" : payer_id}):
         order.payment_status="Completed"
         order.status="Processing"
+        order.transaction_id = payment.transactions[0].related_resources[0].sale.id
+        order.payer_email = payment.payer.payer_info.email
+        order.payment_amount = payment.transactions[0].amount.total
+        order.payment_currency = payment.transactions[0].amount.currency
+        order.payment_time = payment.create_time
         order.save()
-        return redirect('orders:order_detail',order.id)
+
+        for item in order.items.all():
+            product=item.product
+            if product.stock >= item.quantity:
+                product.stock -= item.quantity
+                product.save()
+            else:
+                order.payment_status="Failed"
+                order.save()
+                messages.error(request, f" Product {product.name} is out of stock.")
+                return redirect('orders:order_detail', order.id)
+        if 'cart' in request.session:
+            del request.session['cart']
+        messages.success(request, "Payment successful! Your order is now processing.")
+        return redirect('orders:order_detail', order.id)
     else:
         order.payment_status="Failed"
         order.save()
