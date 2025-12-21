@@ -241,8 +241,13 @@ PAYPAL_MODE = os.getenv('PAYPAL_MODE')  # sandbox or live
 
 # Static and media files
 STATIC_URL = '/static/'
+
+# Folder where `collectstatic` will collect all static files
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Extra folders with static files (used in development)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Make sure this folder exists
 
 
 MEDIA_URL = '/media/'
