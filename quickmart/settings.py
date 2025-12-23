@@ -12,15 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
-import os
-
-from dotenv import load_dotenv
-
-load_dotenv()
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = False
-ALLOWED_HOSTS = ['13.60.81.120', 'localhost']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,11 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True commented for production
-# ALLOWED_HOSTS = [] #commented for production
+DEBUG = True
+
+ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'login'
@@ -126,17 +118,15 @@ USE_I18N = True
 USE_TZ = True
 
 # PayPal settings
-PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
-PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET')
-PAYPAL_MODE = os.getenv('PAYPAL_MODE')  # use 'live' in production
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = config('PAYPAL_CLIENT_SECRET')
+PAYPAL_MODE = config('PAYPAL_MODE')  # use 'live' in production
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "/static/"
-# STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = 'static/'
+STATICFILES_DIRS=[BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -145,4 +135,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
